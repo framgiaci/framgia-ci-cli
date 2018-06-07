@@ -19,7 +19,7 @@ setup(
     description = 'Command Line Tool for Framgia CI service written in Python',
     author = 'ThangTD and TienNA @Framgia Vietnam CI/CD Team',
     author_email = 'tran.duc.thang@framgia.com',
-    url = 'http://ci-reports.framgia.vn',
+    url = 'https://civ3.framgia.vn',
     classifiers=[
         # Indicate who your project is intended for
         'Development Status :: 5 - Production/Stable',

@@ -80,24 +80,24 @@ def merge_test_config(base, overwrite):
     return result
 
 def build_params():
-    repo = os.environ.get('DRONE_REPO').split('/')
+    repo = os.environ.get('FRAMGIACI_REPO').split('/')
     return {
         'workspace': {
-            'path': os.environ.get('DRONE_DIR')
+            'path': os.environ.get('FRAMGIACI_DIR')
         },
         'repo': {
             'owner': repo[0],
             'name': repo[1],
-            'full_name': os.environ.get('DRONE_REPO')
+            'full_name': os.environ.get('FRAMGIACI_REPO')
         },
         'build': {
-            'number': os.environ.get('DRONE_BUILD_NUMBER'),
-            'commit': os.environ.get('DRONE_COMMIT'),
-            'branch': os.environ.get('DRONE_BRANCH'),
-            'pull_request_number': os.environ.get('DRONE_PULL_REQUEST')
+            'number': os.environ.get('FRAMGIACI_BUILD_NUMBER'),
+            'commit': os.environ.get('FRAMGIACI_COMMIT'),
+            'branch': os.environ.get('FRAMGIACI_BRANCH'),
+            'pull_request_number': os.environ.get('FRAMGIACI_PULL_REQUEST')
         },
         'job': {
-            'number': os.environ.get('DRONE_JOB_NUMBER')
+            'number': os.environ.get('FRAMGIACI_JOB_NUMBER')
         }
     }
 
