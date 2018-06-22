@@ -23,7 +23,7 @@ class RunReportCommand(Command):
         queue_id = None
         token = None
         for i in range(1, retry_time):
-            queue_result = call_api(base_api_url, True, params, ['Content-Type: application/json'])
+            queue_result = call_api(base_api_url, True, params, [])
             if (queue_result and 'errorCode' in queue_result and not queue_result['errorCode']):
                 queue_id = queue_result['data']['queueId']
                 token = queue_result['data']['token']

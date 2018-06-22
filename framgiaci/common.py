@@ -3,6 +3,8 @@ import yaml
 import sys
 import pycurl
 import json
+import hashlib
+import hmac
 
 from io import BytesIO
 
@@ -81,6 +83,7 @@ def merge_test_config(base, overwrite):
 
 def build_params():
     repo = os.environ.get('FRAMGIACI_REPO').split('/')
+    message = str(repo[0])+str(repo[1])+str(os.environ.get('FRAMGIACI_BUILD_NUMBER'))+str(os.environ.get('FRAMGIACI_COMMIT'))
     return {
         'workspace': {
             'path': os.environ.get('FRAMGIACI_DIR')
@@ -98,7 +101,8 @@ def build_params():
         },
         'job': {
             'number': os.environ.get('FRAMGIACI_JOB_NUMBER')
-        }
+        },
+        'token': hmac.new(b'b51333889a8aef7f6f97e164d7cba1b0e1c5d2c2', message.encode(), hashlib.sha256).hexdigest()
     }
 
 def call_api(url, is_post=False, params={}, headers=[], files=[]):

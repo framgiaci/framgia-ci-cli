@@ -19,7 +19,7 @@ class ReportApplication(Application):
 
     def check_configure_file_exists(self):
         if not os.path.isfile(self.configure_file_name):
-            print('.framgia-ci.yml file does not exists')
+            print('framgia-ci.yml file does not exists')
             sys.exit(1)
 
     def config(self, configure_file_name, temp_file_name):

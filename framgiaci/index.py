@@ -15,7 +15,7 @@ from framgiaci.commands.run_notify import RunNotifyCommand
 from framgiaci.commands.test_connect import TestConnectCommand
 from framgiaci.commands.run_upload import RunUploadCommand
 
-YAML_CONFIGURE_FILE = '.framgia-ci.yml'
+YAML_CONFIGURE_FILE = 'framgia-ci.yml'
 RESULT_TEMP_FILE = '.framgia-ci-result.temp.yml'
 
 COMMANDS = [
@@ -25,7 +25,7 @@ COMMANDS = [
 ]
 
 def main():
-    print('Framgia CI Report Tool', __version__)
+    print('Framgia CI V3 Report Tool', __version__)
     app = ReportApplication()
     app.config(YAML_CONFIGURE_FILE, RESULT_TEMP_FILE)
     for command in COMMANDS:
