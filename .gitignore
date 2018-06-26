@@ -16,3 +16,8 @@ __pycache__/
 *~
 dist/*.tar.gz
 dist/*.egg
+bin/
+include/
+lib/
+local/
+pip-selfcheck.json
