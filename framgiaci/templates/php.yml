@@ -1,5 +1,35 @@
 project_type: php
+build:
+  general_test:
+    image: framgiaciteam/laravel-workspace:latest
+    services:
+      mysql:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+      mysql_test:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead_test
+          MYSQL_USER: homestead_test
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+    prepare:
+      - cp .env.civ3.example .env
+      - php artisan config:clear
+      - composer install
+      - framgia-ci test-connect mysql_test 3306 60
+      - php artisan migrate --database=mysql_test
 test:
+  eslint:
+    ignore: false
+    command: eslint --format=checkstyle
+      --output-file=.framgia-ci-reports/eslint.xml
+      resources/assets/js/ --ext .js
+    auto_fix: eslint resources/assets/js/ --fix
   phpcpd:
     ignore: true
     command: phpcpd --log-pmd=.framgia-ci-reports/phpcpd.xml app
@@ -17,16 +47,30 @@ test:
     command: phpmetrics --report-html=.framgia-ci-reports/metrics.html
       --report-xml=.framgia-ci-reports/metrics.xml
       app
-  eslint:
-    command: eslint --format=checkstyle
-      --output-file=.framgia-ci-reports/eslint.xml
-      resources/assets/js/
   phpcs:
-    command: phpcs --standard=Framgia --report-checkstyle=.framgia-ci-reports/phpcs.xml app
+    ignore: false
+    command: echo '' | phpcs --standard=Framgia --report-checkstyle=.framgia-ci-reports/phpcs.xml --ignore=app/Supports/* app
+    auto_fix: phpcbf --standard=Framgia app --fix
   phpunit:
+    ignore: false
     command:
-      - sleep 30
-      - php artisan migrate --database=mysql_test
       - php -dzend_extension=xdebug.so vendor/bin/phpunit
         --coverage-clover=.framgia-ci-reports/coverage-clover.xml
         --coverage-html=.framgia-ci-reports/coverage
+#deploy:
+  #rocketeer:
+    #image: fdplugins/ssh-php:php5
+    #when:
+      #branch: master
+      #status: ['sucess', 'false']
+    #commands:
+      #- php rocketeer.phar deploy --on=staging --no-interaction
+cache:
+  #git:
+    #folder: .git
+  composer:
+    folder: vendor
+    file: composer.lock
+  nodejs:
+    folder: node_modules
+    file: yarn.lock
