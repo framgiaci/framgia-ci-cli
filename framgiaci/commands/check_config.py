@@ -12,6 +12,7 @@ class CheckConfigCommand(Command):
 
     ALLOWED_BLOCKS = {
         'command': [str, list],
+        'auto_fix': str,
         'comment': bool,
         'ignore': bool,
         'enable': bool,

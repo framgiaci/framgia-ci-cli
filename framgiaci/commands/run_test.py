@@ -1,5 +1,6 @@
 import sys
 import os
+import errno
 
 from cleo import Command
 
@@ -11,28 +12,42 @@ class RunTestCommand(Command):
     Running test tools
 
     test
+    " && ".join((options['command'] , options['auto_fix']))
     """
 
     def handle(self):
         self.app.check_configure_file_exists()
         print_header('Running Test')
         if self.app.ci_reports['test']:
-            os.makedirs('.framgia-ci-reports', exist_ok=True)
+            if not os.path.exists('.framgia-ci-reports'):
+                try:
+                    os.makedirs('.framgia-ci-reports', 777)
+                except OSError as exc:  # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
             test_commands = self.app.ci_reports['test']
             results = {}
             for tool, options in test_commands.items():
                 if options.get('enable', True):
                     to_run_cmds = []
+
                     if isinstance(options['command'], str):
                         to_run_cmds.append(options['command'])
+                        try:
+                            to_run_cmds.append(options['auto_fix'])
+                        except KeyError:
+                            pass
                     elif isinstance(options['command'], list):
                         to_run_cmds = options['command']
+                        try:
+                            to_run_cmds.append(options['auto_fix'])
+                        except KeyError:
+                            pass
 
                     general_result = 0
+
                     for command in to_run_cmds:
                         general_result = run_command(command)
-                        if general_result:
-                            break
 
                     results[tool] = {
                         'exit_code': general_result,
