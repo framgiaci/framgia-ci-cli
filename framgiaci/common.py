@@ -132,3 +132,16 @@ def call_api(url, is_post=False, params={}, headers=[], files=[]):
         return json.loads(body)
     except Exception:
         return {'errorCode': 'Server Error !'}
+
+def listen_event(client):
+    events = client.events()
+    for event in events:
+        my_event = json.loads(event.decode('utf-8'))
+        _action = my_event['Action']
+        _type = my_event['Type']
+        _actor = my_event['Actor']
+        
+        if _type == 'image':
+            _status = my_event['status']
+            print("Type:" + _type + " Status:" + _status + " ID:" + _actor['ID'])
+        # print(event)
