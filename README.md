@@ -15,10 +15,10 @@
 - For running inside **Docker Container**, which does not contain Python in almost cases
 ```
 // Using curl
-# curl -o /usr/bin/framgia-ci https://raw.githubusercontent.com/framgia/ci-report-tool/master/dist/framgia-ci && chmod +x /usr/bin/framgia-ci
+# curl -o /usr/bin/framgia-ci https://raw.githubusercontent.com/framgiaci/framgia-ci-cli/master/dist/framgia-ci && chmod +x /usr/bin/framgia-ci
 
 // Using wget
-# wget -O /usr/bin/framgia-ci https://raw.githubusercontent.com/framgia/ci-report-tool/master/dist/framgia-ci && chmod +x /usr/bin/framgia-ci
+# wget -O /usr/bin/framgia-ci https://raw.githubusercontent.com/framgiaci/framgia-ci-cli/master/dist/framgia-ci && chmod +x /usr/bin/framgia-ci
 ```
 #### Install by using `pip`
 - Requirement: **python 3.5**
@@ -49,6 +49,7 @@ $ brew install python3
 ## Usage
 - Command lists
 ```
+build         Build project on local machine
 check-config  Validate config file
 finish        Running finish command tools
 init          Init new config file base-ed on template. Supported project type: php, ruby, android
@@ -78,6 +79,10 @@ framgia-ci run --local
 
 // Check mysql connection in localhost
 framgia-ci test-connect 127.0.0.1 3306
+
+// Build project on local machine
+// This feature requires your computer must install **Docker**
+framgia-ci build
 ```
 
 ## Framgia CI Configuration
@@ -86,14 +91,42 @@ framgia-ci test-connect 127.0.0.1 3306
 - Example configuration file:
 ```
 project_type: php
+build:
+  general_test:
+    image: framgiaciteam/laravel-workspace:latest
+    services:
+      mysql:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+      mysql_test:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead_test
+          MYSQL_USER: homestead_test
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+    prepare:
+      - php artisan config:clear
+      - composer install
+      - framgia-ci test-connect mysql_test 3306 60
+      - php artisan migrate --database=mysql_test
 test:
+  eslint:
+    ignore: false
+    command: eslint --format=checkstyle
+      --output-file=.framgia-ci-reports/eslint.xml
+      resources/assets/js/ --ext .js
+    auto_fix: eslint resources/assets/js/ --fix
   phpcpd:
     ignore: true
     command: phpcpd --log-pmd=.framgia-ci-reports/phpcpd.xml app
   phpmd:
     ignore: true
-    command: phpmd app xml
-      cleancode,codesize,controversial,design,naming,unusedcode --reportfile .framgia-ci-reports/phpmd.xml
+    command: phpmd app xml cleancode,codesize,controversial,design,naming,unusedcode --reportfile .framgia-ci-reports/phpmd.xml
   pdepend:
     ignore: true
     command: pdepend --summary-xml=.framgia-ci-reports/pdepend.xml
@@ -105,21 +138,36 @@ test:
     command: phpmetrics --report-html=.framgia-ci-reports/metrics.html
       --report-xml=.framgia-ci-reports/metrics.xml
       app
-  eslint:
-    command: eslint --format=checkstyle
-      --output-file=.framgia-ci-reports/eslint.xml
-      resources/assets/js/
   phpcs:
-    command: phpcs --standard=Framgia --report-checkstyle=.framgia-ci-reports/phpcs.xml app
+    ignore: false
+    command: echo '' | phpcs --standard=Framgia --report-checkstyle=.framgia-ci-reports/phpcs.xml --ignore=app/Supports/* app
+    auto_fix: phpcbf --standard=Framgia app --fix
   phpunit:
+    ignore: false
     command:
-      - framgia-ci test-connect 127.0.0.1 3306
-      - php artisan migrate --database=mysql_test
       - php -dzend_extension=xdebug.so vendor/bin/phpunit
         --coverage-clover=.framgia-ci-reports/coverage-clover.xml
         --coverage-html=.framgia-ci-reports/coverage
+#deploy:
+  #rocketeer:
+    #image: fdplugins/ssh-php:php5
+    #when:
+      #branch: master
+      #status: ['sucess', 'false']
+    #commands:
+      #- php rocketeer.phar deploy --on=staging --no-interaction
+cache:
+  #git:
+    #folder: .git
+  composer:
+    folder: vendor
+    file: composer.lock
+  nodejs:
+    folder: node_modules
+    file: yarn.lock
 ```
 - `project_type` key: Define the type of the project. Currently supports `php`, `ruby` and `android`. This key is **required**
+- `build` key: `general_test` key: include `image` key, `services` key and `prepare` key. `image` key: define main environment base on Docker image, `services` key: define which services used by project, such as: mysql, redis,.. and `prepare` key: define commands which ran on main enviroment before running test.
 - `test` key: Define test section with customizable commands. This section is **required**
 - `phpcpd`, `phpmd`, `phpcs`, `phpunit` ...: Configuration for each test tools. All of them will be executed, even if the other test tools are success or not.
 - `ignore` key: Define whether the build should be considered as `failed` or not when the test tool is failed. The default value is `false`. If you set it to `true`, the build will be considered as success even when the command returns `false` (with non-zero `exit code`)
