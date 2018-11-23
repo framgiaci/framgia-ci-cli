@@ -25,10 +25,10 @@
 - Command:
 ```
 // Install
-# pip install framgia-ci
+# pip install -i https://test.pypi.org/simple/ framgia-ci
 
 // Update
-# pip install --upgrade framgia-ci
+# pip install --upgrade -i https://test.pypi.org/simple/ framgia-ci
 ```
 
 ### Mac OS

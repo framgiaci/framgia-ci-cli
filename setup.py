@@ -10,7 +10,7 @@ with open(convert_path('framgiaci/version.py')) as ver_file:
 setup(
     name = 'framgia-ci',
     packages = ['framgiaci', 'framgiaci.commands'],
-    install_requires=['pycurl', 'pyyaml', 'cleo'],
+    install_requires=['pycurl', 'pyyaml', 'cleo', 'docker'],
     entry_points = {
         'console_scripts': ['framgia-ci=framgiaci.index:main']
     },
