@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import sys
+import fcntl
 from framgiaci.version import __version__
 from framgiaci.report_app import ReportApplication
 from framgiaci.commands.run_finish import RunFinishCommand
@@ -26,6 +27,7 @@ COMMANDS = [
 ]
 
 def main():
+    fcntl.fcntl(1, fcntl.F_SETFL, 0)
     print('Framgia CI V3 Tool', __version__)
     app = ReportApplication()
     app.config(YAML_CONFIGURE_FILE, RESULT_TEMP_FILE)
