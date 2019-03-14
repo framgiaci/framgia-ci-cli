@@ -3,6 +3,7 @@ import os
 import xml.etree.ElementTree as ET
 import zipfile
 import shutil
+import errno
 
 from cleo import Command
 
@@ -65,7 +66,14 @@ class RunUploadCommand(Command):
     def build_zip_file(self, params, basedir='.framgia-ci-reports'):
         files_list = []
         report_path =  os.path.join(basedir, 'reports')
-        os.mkdir(report_path)
+        
+        if not os.path.exists(report_path):
+                try:
+                    os.makedirs(report_path, 777)
+                    open(report_path + '/.temp', 'a').close()
+                except OSError as exc:  # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
 
         for root, dirs, files in os.walk(basedir):
             for file in files:
