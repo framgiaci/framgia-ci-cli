@@ -10,6 +10,7 @@ class RunFinishCommand(Command):
     Running finish command tools
 
     finish
+        {--logs : show more logs output}
     """
 
     def handle(self):

@@ -15,6 +15,7 @@ class RunUploadCommand(Command):
     Running build and upload reports command
 
     upload
+        {--logs : show more logs output}
     """
 
     ALL_REPORTS = [

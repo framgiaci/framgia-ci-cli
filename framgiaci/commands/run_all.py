@@ -10,6 +10,7 @@ class RunAllCommand(Command):
 
     run
         {--local : run test and finish only}
+        {--logs : show more logs output}
     """
 
     def handle(self):
@@ -19,7 +20,10 @@ class RunAllCommand(Command):
             commands.remove('upload')
         for command in commands:
             try:
-                self.call(command)
+                if self.option('logs'):
+                    self.call(command, ['--logs'])
+                else:
+                    self.call(command)
             except SystemExit as exception:
                 if exception.code:
                     sys.exit(exception.code)

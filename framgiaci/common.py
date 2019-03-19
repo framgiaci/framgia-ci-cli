@@ -17,6 +17,15 @@ def run_command(command):
         print('[!] Error:', e)
         return 1
 
+def run_command_silent(command):
+    try:
+        print("[+] Running: ", command)
+        return os.system(command + ' > /dev/null 2>/dev/null; echo $?')
+
+    except Exception as e:
+        print('[!] Error:', e)
+        return 1
+
 
 def read_yaml_file(file):
     try:

@@ -4,7 +4,7 @@ import errno
 
 from cleo import Command
 
-from framgiaci.common import print_header, run_command, write_results
+from framgiaci.common import print_header, run_command, run_command_silent, write_results
 
 
 class RunTestCommand(Command):
@@ -12,6 +12,7 @@ class RunTestCommand(Command):
     Running test tools
 
     test
+        {--logs : show more logs output}
     " && ".join((options['command'] , options['auto_fix']))
     """
 
@@ -47,7 +48,10 @@ class RunTestCommand(Command):
                     general_result = 0
 
                     for command in to_run_cmds:
-                        general_result = run_command(command)
+                        if self.option('logs'):
+                            general_result = run_command(command)
+                        else:
+                            general_result = run_command_silent(command)
 
                     results[tool] = {
                         'exit_code': general_result,
