@@ -5,6 +5,7 @@ import pycurl
 import json
 import hashlib
 import hmac
+import subprocess
 
 from io import BytesIO
 
@@ -20,7 +21,7 @@ def run_command(command):
 def run_command_silent(command):
     try:
         print("[+] Running: ", command)
-        return os.system(command + ' > /dev/null 2>/dev/null; echo $?')
+        return subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
     except Exception as e:
         print('[!] Error:', e)
