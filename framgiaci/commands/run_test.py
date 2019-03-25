@@ -22,7 +22,9 @@ class RunTestCommand(Command):
         if self.app.ci_reports['test']:
             if not os.path.exists('.framgia-ci-reports'):
                 try:
+                    oldmask = os.umask(000)
                     os.makedirs('.framgia-ci-reports', 777)
+                    os.umask(oldmask)
                 except OSError as exc:  # Guard against race condition
                     if exc.errno != errno.EEXIST:
                         raise
@@ -54,7 +56,7 @@ class RunTestCommand(Command):
                             general_result = run_command_silent(command)
 
                     results[tool] = {
-                        'exit_code': general_result,
+                        'exit_code': general_result.returncode,
                         'comment': options.get('comment', True),
                         'ignore': options.get('ignore', False) == True
                     }

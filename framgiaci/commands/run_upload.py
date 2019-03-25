@@ -69,12 +69,12 @@ class RunUploadCommand(Command):
         report_path =  os.path.join(basedir, 'reports')
         
         if not os.path.exists(report_path):
-                try:
-                    os.makedirs(report_path, 777)
-                    open(report_path + '/.temp', 'a').close()
-                except OSError as exc:  # Guard against race condition
-                    if exc.errno != errno.EEXIST:
-                        raise
+            try:
+                os.makedirs(report_path, 777)
+                open(report_path + '/.temp', 'a').close()
+            except OSError as exc:  # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
 
         for root, dirs, files in os.walk(basedir):
             for file in files:
