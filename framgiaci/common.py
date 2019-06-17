@@ -12,7 +12,7 @@ from io import BytesIO
 def run_command(command):
     try:
         print("[+] Running: ", command)
-        return subprocess.run(command, shell=True)
+        return subprocess.run(command, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
@@ -21,7 +21,7 @@ def run_command(command):
 def run_command_silent(command):
     try:
         print("[+] Running: ", command)
-        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
