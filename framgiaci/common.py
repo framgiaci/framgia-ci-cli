@@ -12,7 +12,7 @@ from io import BytesIO
 def run_command(command):
     try:
         print("[+] Running: ", command)
-        return subprocess.run(command, shell=True)
+        return subprocess.run(command, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
@@ -21,7 +21,7 @@ def run_command(command):
 def run_command_silent(command):
     try:
         print("[+] Running: ", command)
-        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
@@ -42,8 +42,9 @@ def read_results(temp_file):
 
 
 def write_results(results, temp_file):
-    with open(temp_file, 'w') as outfile:
-        yaml.dump(results, outfile, default_flow_style=False)
+    with open(temp_file, 'a+') as outfile:
+        outfile.write('\n')
+        yaml.safe_dump(results, outfile, default_flow_style=False)
 
 
 def print_header(text):
