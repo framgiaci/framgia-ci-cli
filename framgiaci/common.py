@@ -43,7 +43,6 @@ def read_results(temp_file):
 
 def write_results(results, temp_file):
     with open(temp_file, 'a+') as outfile:
-        outfile.write('\n')
         yaml.safe_dump(results, outfile, default_flow_style=False)
 
 
