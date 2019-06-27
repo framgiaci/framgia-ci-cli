@@ -49,18 +49,23 @@ $ brew install python3
 ## Usage
 - Command lists
 ```
-build         Build project on local machine
-check-config  Validate config file
-finish        Running finish command tools
-init          Init new config file base-ed on template. Supported project type: php, ruby, android
-report        Running report command to send copying request to CI Report service
-notify        Running notify command to send notify request to CI Report service
-upload        Running upload command to send zipped bundle reports to CI Report service
-run           Running test, upload, finish command
-run --local   Running test, finish command. For running at local machine
-show-config   Display current config
-test          Running test tools
-test-connect  Test connection to specific host and port
+build                       Build project on local machine
+check-config                Validate config file
+finish                      Running finish command tools
+init                        Init new config file base-ed on template. Supported project type: php, ruby, android
+report                      Running report command to send copying request to CI Report service
+notify                      Running notify command to send notify request to CI Report service
+upload                      Running upload command to send zipped bundle reports to CI Report service
+run                         Running test, upload, finish command
+run --logs                  Running test, upload, finish command with verbose
+run --local                 Running test, finish command. For running at local machine
+run-rspec                   Running custom RSPEC for changed file.
+run-rspec --all             Running all spec files {--all : Run all spec files.}
+run-rspec --spec-dir=spec/  Define where is spec files in a single directory {--spec-dir=spec/ : Define where is spec files in a single directory}
+run-rspec --output-dir=     Define output directory {--output-dir=.framgia-ci-reports/ : Define output directory}
+show-config                 Display current config
+test                        Running test tools
+test-connect                Test connection to specific host and port
 ```
 
 For example

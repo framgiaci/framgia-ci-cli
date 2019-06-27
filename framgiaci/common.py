@@ -20,7 +20,7 @@ def run_command(command):
 
 def exec_command(command):
     try:
-        return subprocess.run(command, shell=True, timeout=7200)
+        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
