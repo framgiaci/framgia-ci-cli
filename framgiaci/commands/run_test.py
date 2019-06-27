@@ -16,9 +16,12 @@ class RunTestCommand(Command):
     " && ".join((options['command'] , options['auto_fix']))
     """
 
+    REQUIRE_TOOLS = ['phpunit', 'rspec', 'jest']
+
     def handle(self):
         self.app.check_configure_file_exists()
         print_header('Running Test')
+        
         if self.app.ci_reports['test']:
             if not os.path.exists('.framgia-ci-reports'):
                 try:
@@ -48,8 +51,16 @@ class RunTestCommand(Command):
                             pass
 
                     general_result = 0
+                    is_require = False
 
                     for command in to_run_cmds:
+
+                        #Check current command is require tool.
+                        for require_tool in self.REQUIRE_TOOLS:
+                            is_require = require_tool in command
+                            if is_require:
+                                break
+
                         if self.option('logs'):
                             general_result = run_command(command)
                         else:
@@ -58,7 +69,8 @@ class RunTestCommand(Command):
                     results[tool] = {
                         'exit_code': general_result.returncode,
                         'comment': options.get('comment', True),
-                        'ignore': options.get('ignore', False) == True
+                        'ignore': False if is_require else (options.get('ignore', False) == True) # If command is require tool, cant Ignore.
                     }
+
             write_results(results, self.app.temp_file_name)
             sys.exit(0)

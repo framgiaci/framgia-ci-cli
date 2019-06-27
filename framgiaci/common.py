@@ -18,6 +18,14 @@ def run_command(command):
         print('[!] Error:', e)
         return 1
 
+def exec_command(command):
+    try:
+        return subprocess.run(command, shell=True, timeout=7200)
+
+    except Exception as e:
+        print('[!] Error:', e)
+        return 1
+
 def run_command_silent(command):
     try:
         print("[+] Running: ", command)
@@ -39,6 +47,14 @@ def read_yaml_file(file):
 
 def read_results(temp_file):
     return read_yaml_file(temp_file)
+
+def read_diff_files(temp_file):
+    try:
+        with open(temp_file, "r") as f:
+            return yaml.load(f.readline())
+    except Exception as e:
+        print('Can not read file', temp_file)
+        sys.exit(1)
 
 
 def write_results(results, temp_file):
