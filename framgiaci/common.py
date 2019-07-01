@@ -18,9 +18,17 @@ def run_command(command):
         print('[!] Error:', e)
         return 1
 
-def exec_command(command):
+def exec_command_silent(command):
     try:
         return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
+
+    except Exception as e:
+        print('[!] Error:', e)
+        return 1
+
+def exec_command(command):
+    try:
+        return subprocess.run(command, shell=True, timeout=7200)
 
     except Exception as e:
         print('[!] Error:', e)
