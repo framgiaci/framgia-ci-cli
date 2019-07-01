@@ -4,6 +4,7 @@ import yaml
 
 from cleo import Command
 
+yaml.warnings({'YAMLLoadWarning': False})
 
 class ShowConfigCommand(Command):
     """

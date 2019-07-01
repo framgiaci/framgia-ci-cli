@@ -7,6 +7,8 @@ import hashlib
 import hmac
 import subprocess
 
+yaml.warnings({'YAMLLoadWarning': False})
+
 from io import BytesIO
 
 def run_command(command):
