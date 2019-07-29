@@ -6,13 +6,20 @@ import json
 import hashlib
 import hmac
 import subprocess
+import time
 
 from io import BytesIO
 
 def run_command(command):
     try:
+        procR = {"cmd": 0, "time": "0s"}
+        timeStarted = time.time()      
         print("[+] Running: ", command)
-        return subprocess.run(command, shell=True, timeout=7200)
+        subproc = subprocess.run(command, shell=True, timeout=7200)
+        timeDelta = time.time() - timeStarted 
+        procR["cmd"] = subproc
+        procR["time"] = str(timeDelta) + "s"
+        return procR
 
     except Exception as e:
         print('[!] Error:', e)
@@ -36,13 +43,18 @@ def exec_command(command):
 
 def run_command_silent(command):
     try:
+        procR = {"cmd": 0, "time": "0s"}
+        timeStarted = time.time() 
         print("[+] Running: ", command)
-        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
+        subproc =  subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
+        timeDelta = time.time() - timeStarted 
+        procR["cmd"] = subproc
+        procR["time"] = str(timeDelta) + "s"
+        return procR
 
     except Exception as e:
         print('[!] Error:', e)
         return 1
-
 
 def read_yaml_file(file):
     try:
