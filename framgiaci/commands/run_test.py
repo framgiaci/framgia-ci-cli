@@ -67,7 +67,8 @@ class RunTestCommand(Command):
                             general_result = run_command_silent(command)
 
                     results[tool] = {
-                        'exit_code': general_result.returncode,
+                        'exit_code': general_result["cmd"].returncode,
+                        'execute_time': general_result["time"],
                         'comment': options.get('comment', True),
                         'ignore': False if is_require else (options.get('ignore', False) == True) # If command is require tool, cant Ignore.
                     }
