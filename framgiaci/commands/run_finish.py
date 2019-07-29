@@ -19,12 +19,24 @@ class RunFinishCommand(Command):
         for tool, result in read_results(self.app.temp_file_name).items():
             if result['exit_code'] != 0:
                 if result['ignore'] == True:
-                    format_str = "[!] %s: failed but ignored - [t] execute time: "+ result["execute_time"] + "\n"
+                    if 'execute_time' in result:
+                        format_str = "[!] %s: failed but ignored - [t] execute time: "+ result["execute_time"] + "\n"
+                    else:
+                        format_str = "[!] %s: failed but ignored \n"
+                    
                 else:
-                    format_str = "[x] %s: failed - [t] execute time: " + result["execute_time"] + "\n"
+                    if 'execute_time' in result:
+                        format_str = "[x] %s: failed - [t] execute time: " + result["execute_time"] + "\n"
+                    else:
+                        format_str = "[!] %s: failed \n"
+                    
                     is_good_build = False
             else:
-                format_str = "[o] %s: success - [t] execute time: " + result["execute_time"] + "\n"
+                if 'execute_time' in result:
+                    format_str = "[o] %s: success - [t] execute time: " + result["execute_time"] + "\n"
+                else:
+                    format_str = "[!] %s: success \n"
+                
             result_text += format_str % tool
 
         if is_good_build:
