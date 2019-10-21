@@ -40,10 +40,10 @@
 $ brew install python3
 
 // Install framgia-ci
-# pip3 install framgia-ci
+# pip3 install -i https://test.pypi.org/simple/ framgia-ci
 
 // Update
-# pip3 install --upgrade framgia-ci
+# pip3 install --upgrade -i https://test.pypi.org/simple/ framgia-ci
 ```
 
 ## Usage
