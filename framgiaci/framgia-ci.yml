@@ -1,0 +1,42 @@
+project_type: php
+build:
+  general_test:
+    image: framgiaciteam/laravel-workspace:latest
+    services:
+      mysql:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+      mysql_test:
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: homestead_test
+          MYSQL_USER: homestead_test
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+    prepare:
+      - cp .env.civ3.example .env
+      - php artisan config:clear
+      - composer install
+      - framgia-ci test-connect mysql_test 3306 60
+      - php artisan migrate --database=mysql_test
+test:
+  eslint:
+    ignore: false
+    command: echo 1
+  phpcpd:
+    ignore: true
+    command: echo 322
+
+cache:
+  #git:
+    #folder: .git
+  composer:
+    folder: vendor
+    file: composer.lock
+  nodejs:
+    folder: node_modules
+    file: yarn.lock

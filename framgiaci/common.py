@@ -13,10 +13,10 @@ from io import BytesIO
 def run_command(command):
     try:
         procR = {"cmd": 0, "time": "0s"}
-        timeStarted = time.time()      
+        timeStarted = time.time()
         print("[+] Running: ", command)
         subproc = subprocess.run(command, shell=True, timeout=7200)
-        timeDelta = time.time() - timeStarted 
+        timeDelta = time.time() - timeStarted
         procR["cmd"] = subproc
         procR["time"] = str(timeDelta) + "s"
         return procR
@@ -44,10 +44,10 @@ def exec_command(command):
 def run_command_silent(command):
     try:
         procR = {"cmd": 0, "time": "0s"}
-        timeStarted = time.time() 
+        timeStarted = time.time()
         print("[+] Running: ", command)
         subproc =  subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, timeout=7200)
-        timeDelta = time.time() - timeStarted 
+        timeDelta = time.time() - timeStarted
         procR["cmd"] = subproc
         procR["time"] = str(timeDelta) + "s"
         return procR
@@ -59,7 +59,7 @@ def run_command_silent(command):
 def read_yaml_file(file):
     try:
         with open(file, "r") as f:
-            return yaml.load(f.read())
+            return yaml.safe_load(f.read())
     except Exception as e:
         print('Can not read file', file)
         sys.exit(1)
@@ -78,8 +78,10 @@ def read_diff_files(temp_file):
 
 
 def write_results(results, temp_file):
+    if os.path.exists(temp_file):
+        os.remove(temp_file)
     with open(temp_file, 'a+') as outfile:
-        yaml.safe_dump(results, outfile, default_flow_style=False)
+        yaml.dump(results, outfile, default_flow_style=False)
 
 
 def print_header(text):
@@ -186,7 +188,7 @@ def listen_event(client):
         _action = my_event['Action']
         _type = my_event['Type']
         _actor = my_event['Actor']
-        
+
         if _type == 'image':
             _status = my_event['status']
             print("Type:" + _type + " Status:" + _status + " ID:" + _actor['ID'])

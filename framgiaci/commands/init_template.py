@@ -9,12 +9,12 @@ class InitTemplateCommand(Command):
     Init new config file base-ed on template. Supported project type: php, ruby, android, ios
 
     init
-        {project_type : Supported project type}
+        {project-type : Supported project type}
         {--short : create compact init file}
     """
 
     def handle(self):
-        project_type = self.argument('project_type')
+        project_type = self.argument('project-type')
         if project_type not in self.app.PROJ_TYPES:
             self.line('<error>Invalid project type !</error>')
         else:

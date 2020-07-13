@@ -21,7 +21,7 @@ class RunTestCommand(Command):
     def handle(self):
         self.app.check_configure_file_exists()
         print_header('Running Test')
-        
+
         if self.app.ci_reports['test']:
             if not os.path.exists('.framgia-ci-reports'):
                 try:
@@ -66,12 +66,12 @@ class RunTestCommand(Command):
                         else:
                             general_result = run_command_silent(command)
 
-                    results[tool] = {
-                        'exit_code': general_result["cmd"].returncode,
-                        'execute_time': general_result["time"],
-                        'comment': options.get('comment', True),
-                        'ignore': False if is_require else (options.get('ignore', False) == True) # If command is require tool, cant Ignore.
-                    }
+                        results[tool] = {
+                            'exit_code': general_result["cmd"].returncode,
+                            'execute_time': general_result["time"],
+                            'comment': options.get('comment', True),
+                            'ignore': False if is_require else (options.get('ignore', False) == True) # If command is require tool, cant Ignore.
+                        }
 
             write_results(results, self.app.temp_file_name)
             sys.exit(0)

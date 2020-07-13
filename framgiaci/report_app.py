@@ -22,7 +22,7 @@ class ReportApplication(Application):
             print('framgia-ci.yml file does not exists')
             sys.exit(1)
 
-    def config(self, configure_file_name, temp_file_name):
+    def load_config(self, configure_file_name, temp_file_name):
         self.configure_file_name = configure_file_name
         self.temp_file_name = temp_file_name
         if os.path.isfile(configure_file_name):
